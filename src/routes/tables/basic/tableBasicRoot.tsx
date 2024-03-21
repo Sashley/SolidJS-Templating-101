@@ -5,8 +5,6 @@ import {
   createSolidTable,
 } from "@tanstack/solid-table";
 import { createSignal, For } from "solid-js";
-// import { render } from "solid-js/web";
-// import html from "solid-js/html";
 
 type Person = {
   firstName: string;
@@ -54,7 +52,6 @@ const defaultColumns: ColumnDef<Person>[] = [
     accessorFn: (row) => row.lastName,
     id: "lastName",
     cell: (info) => <i>{info.getValue<string>()}</i>,
-    // header: () => <span>Last Name</span>,
     header: () => <span>Last Name</span>,
     footer: (info) => info.column.id,
   },

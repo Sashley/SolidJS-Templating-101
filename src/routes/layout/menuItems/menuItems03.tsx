@@ -1,15 +1,6 @@
-// import { useLocation } from "@solidjs/router";
 import "../../../app.css";
-import { lazy } from "solid-js";
-import type { RouteDefinition } from "@solidjs/router";
 
 export default function menuItems() {
-  // const location = useLocation();
-  // const active = (path: string) =>
-  //   path === location.pathname
-  //     ? "border-stone-600"
-  //     : "border-transparent hover:border-stone-600";
-
   const menuData = [
     { path: "/", title: "Home" },
     { path: "/about", title: "About" },

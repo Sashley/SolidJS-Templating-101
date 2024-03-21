@@ -9,6 +9,4 @@ const routes: RouteDefinition[] = routePaths.map(({ title, path }) => ({
   path: path,
 }));
 
-// Use `routes` with your Router setup
-
 export { routes };
