@@ -104,10 +104,17 @@ function App() {
     },
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
+    filterFns: {
+      fuzzy: (value, filterValue) => {
+        // Implement your fuzzy filter logic here
+        // and return true if the value matches the filterValue, otherwise return false
+        return true; // Replace with your fuzzy filter logic
+      },
+    },
   });
 
   return (
-    <div class="p-2 m-4 text-sm">
+    <div class="text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: basic column table | /tables/column-groups/rootColumnGroup01 |
         ColumnGroup01
@@ -173,7 +180,7 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <button onClick={() => rerender()} class="border mx-2 p-2">
+      <button onClick={() => rerender()} class="border mx-2 p-2 bg-stone-200">
         Rerender
       </button>
     </div>

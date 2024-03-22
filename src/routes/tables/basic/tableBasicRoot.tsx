@@ -96,7 +96,7 @@ function App() {
   });
 
   return (
-    <div class="p-2 m-0 text-sm flex flex-col bg-slate-200">
+    <div class="text-sm flex flex-col bg-stone-200">
       <div class="text-xs bg-stone-100 p-2 mb-2">
         Note: basic table | basic/tableBasicRoot | TableBasic03
       </div>
@@ -161,9 +161,11 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <button onClick={() => rerender()} class="border p-2">
-        Rerender
-      </button>
+      <div>
+        <button onClick={() => rerender()} class="border p-2">
+          Rerender
+        </button>
+      </div>
     </div>
   );
 }

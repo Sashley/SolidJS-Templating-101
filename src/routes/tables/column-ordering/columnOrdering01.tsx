@@ -86,6 +86,13 @@ function App() {
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    filterFns: {
+      fuzzy: (rows, id, filterValue) => {
+        // Implement your fuzzy filter logic here
+        // and return the filtered rows
+        return true;
+      },
+    },
   });
 
   const randomizeColumns = () => {

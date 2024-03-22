@@ -114,18 +114,23 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    filterFns: undefined,
+    filterFns: {
+      fuzzy: (value: any, filterValue: any) => {
+        // Implement your fuzzy filter logic here
+        return true; // Replace with your actual fuzzy filter logic
+      },
+    },
   });
 
   return (
-    <div class="p-2 bg-stone-200 m-4 text-sm">
+    <div class="text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: visibility | /tables/column-visibility/visibility01| Visbility01
       </div>
       <div class="flex p-2">
         <div class="flex-col gap-4" />
-        <div class="bg-stone-300 w-48 p-4 m-4 inline-block border border-black shadow rounded">
-          <div class="px-1 border-b border-black">
+        <div class="bg-stone-300 w-48 p-2 m-2 inline-block border border-black shadow rounded">
+          <div class="border-b border-black">
             <label>
               <input
                 checked={table.getIsAllColumnsVisible()}
@@ -150,13 +155,12 @@ function App() {
             )}
           </For>
         </div>
-        {/* <div class="h-4" /> */}
         <div>
           <table>
-            <thead>
+            <thead class="bg-stone-200">
               <For each={table.getHeaderGroups()}>
                 {(headerGroup) => (
-                  <tr class="px-4 bg-stone-200">
+                  <tr>
                     <For each={headerGroup.headers}>
                       {(header) => (
                         <th colSpan={header.colSpan}>
@@ -179,7 +183,7 @@ function App() {
                   <tr class="bg-stone-100">
                     <For each={row.getVisibleCells()}>
                       {(cell) => (
-                        <td class="px-8">
+                        <td>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -191,32 +195,12 @@ function App() {
                 )}
               </For>
             </tbody>
-            {/* <tfoot>
-                <For each={table.getFooterGroups()}>
-                  {footerGroup => (
-                    <tr>
-                      <For each={footerGroup.headers}>
-                        {header => (
-                          <th colSpan={header.colSpan}>
-                            <Show when={!header.isPlaceholder}>
-                              {flexRender(
-                                header.column.columnDef.footer,
-                                header.getContext()
-                              )}
-                            </Show>
-                          </th>
-                        )}
-                      </For>
-                    </tr>
-                  )}
-                </For>
-              </tfoot> */}
           </table>
         </div>
         <div />
       </div>
 
-      <div class="flex-row bg-stone-200">
+      <div class="flex-row">
         <button
           onClick={() => rerender()}
           class="m-4 p-2 bg-stone-500 text-slate-50 rounded"

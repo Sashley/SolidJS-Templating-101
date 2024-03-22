@@ -8,13 +8,13 @@ export default function Layout() {
   const [isMenubarOpen, setIsMenubarOpen] = createSignal(true); // Menubar toggle state
   const active = (path: string) =>
     path == location.pathname
-      ? "border-stone-700"
-      : "border-transparent hover:border-stone-800";
+      ? "border-stone-300"
+      : "border-transparent hover:border-stone-400";
   const mainContentMargin = isMenubarOpen() ? "ml-64" : "ml-0";
 
   return (
     <div class="flex flex-col h-screen">
-      <div class="bg-stone-900 sticky top-0 z-40 h-12">
+      <div class="bg-stone-700 sticky top-0 z-40 h-12">
         <nav class="flex items-center justify-between text-stone-200">
           {/* Hamburger Icon for smaller screens */}
           <div class="p-4">
@@ -37,7 +37,7 @@ export default function Layout() {
           } 2xl:flex flex-col`}
         >
           {/* Menu Header */}
-          <div class="p-4 bg-stone-900 ">
+          <div class="p-4 bg-stone-700 ">
             <h1 class="font-thin text-md text-stone-400">Menu Header</h1>
             <div class="text-xs hover:text-md text-orange-500 hover:bg-stone-100 hover:font-bold hover:p-2 rounded-md">
               <div>strikethrough -</div>
@@ -46,7 +46,7 @@ export default function Layout() {
           </div>
 
           {/* Menu Content */}
-          <div class="flex-grow overflow-y-auto max-h-[calc(100%-7rem)] bg-stone-800">
+          <div class="flex-grow overflow-y-auto max-h-[calc(100%-7rem)] bg-stone-700">
             <div class="py-4 rounded-lg text-stone-100">
               <div class="flex flex-col text-sm">
                 <MenuItems />
@@ -55,13 +55,13 @@ export default function Layout() {
           </div>
 
           {/* Menu Footer */}
-          <div class="p-4 bg-stone-900 ">
+          <div class="p-4 bg-stone-700 ">
             <h1 class="font-thin text-md text-stone-400">Menu Footer</h1>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div class={`flex-grow overflow-y-auto`}>
+        <div class="p-4">
           <Suspense>
             <Router>{routes}</Router>
           </Suspense>

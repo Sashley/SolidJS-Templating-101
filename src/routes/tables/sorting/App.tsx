@@ -23,6 +23,7 @@ function App() {
         {
           accessorKey: "firstName",
           cell: (info) => info.getValue(),
+          header: () => "First Name",
           footer: (props) => props.column.id,
         },
         {
@@ -87,11 +88,11 @@ function App() {
   });
 
   return (
-    <div class="p-2 bg-stone-200 m-4 text-sm">
+    <div class="text-sm">
       <div class="text-xs bg-orange-100 p-2 m-2">
         Note: Layout | /tables/sorting/App | Layout Example 02
       </div>
-      <table>
+      <table class="p-2 m-2">
         <thead>
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (

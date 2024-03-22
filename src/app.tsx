@@ -1,7 +1,6 @@
 import { MetaProvider, Title, Meta } from "@solidjs/meta";
 import { Suspense } from "solid-js";
 import Layout from "./routes/layout/layout03";
-import { Router } from "@solidjs/router";
 import "./app.css";
 
 export default function App() {

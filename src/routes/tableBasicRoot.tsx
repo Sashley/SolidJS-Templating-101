@@ -48,13 +48,13 @@ const defaultColumns: ColumnDef<Person>[] = [
   {
     accessorKey: "firstName",
     cell: (info) => info.getValue(),
+    header: () => "First Name",
     footer: (info) => info.column.id,
   },
   {
     accessorFn: (row) => row.lastName,
     id: "lastName",
     cell: (info) => <i>{info.getValue<string>()}</i>,
-    // header: () => <span>Last Name</span>,
     header: () => <span>Last Name</span>,
     footer: (info) => info.column.id,
   },
@@ -96,11 +96,11 @@ function App() {
   });
 
   return (
-    <div class="p-2 bg-stone-200 flex flex-col">
+    <div class="flex flex-col">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: basic table root | basic/tableBasicRoot | TableBasic04
       </div>
-      <table class="text-sm p-4">
+      <table class="text-sm p-2 m-2 bg-stone-200">
         <thead>
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
@@ -139,31 +139,16 @@ function App() {
             )}
           </For>
         </tbody>
-        <tfoot>
-          <For each={table.getFooterGroups()}>
-            {(footerGroup) => (
-              <tr>
-                <For each={footerGroup.headers}>
-                  {(header) => (
-                    <th class="text-left">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </th>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tfoot>
       </table>
       <div class="h-4" />
-      <button onClick={() => rerender()} class="border p-2">
-        Rerender
-      </button>
+      <div>
+        <button
+          onClick={() => rerender()}
+          class="border p-2 bg-stone-200 rounded-md"
+        >
+          Rerender
+        </button>
+      </div>
     </div>
   );
 }
