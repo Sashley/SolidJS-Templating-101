@@ -26,8 +26,9 @@ export default function menuItems() {
     { path: "/tables/filter01/filter03", title: "Filter03" },
     { path: "/tables/filter01/filter03a", title: "Filter03a" },
     { path: "/tables/filter01/filter03b", title: "Filter03b", issues: true },
+    { path: "/tables/filter01/filter03b1", title: "Filter03b1", issues: false },
     { path: "/tables/filter01/filter03c", title: "Filter03c" },
-    { path: "/tables/filter01/filter03d", title: "Filter03d", issues: true },
+    { path: "/tables/filter01/filter03d", title: "Filter03d", issues: false },
 
     { path: "/tables/filter01/filter03d1", title: "Filter03d1", issues: true },
     { path: "/tables/filter01/filter03d2", title: "Filter03d2", issues: true },
@@ -94,6 +95,10 @@ export default function menuItems() {
     {
       path: "/tables/virtualized-rows/vSort02",
       title: "Virtualized Rows 02",
+    },
+    {
+      path: "/tables/virtualized-rows/vSort03",
+      title: "Virtualized Rows 03",
     },
   ];
 

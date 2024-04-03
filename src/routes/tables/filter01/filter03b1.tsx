@@ -8,6 +8,7 @@ import {
   onCleanup,
 } from "solid-js";
 
+// import "./makeData";
 import { makeData, Person } from "./makeData02";
 
 import {
@@ -37,6 +38,8 @@ import {
   compareItems,
 } from "@tanstack/match-sorter-utils";
 
+import { debounce } from "@solid-primitives/scheduled";
+
 declare module "@tanstack/table-core" {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
@@ -45,6 +48,8 @@ declare module "@tanstack/table-core" {
     itemRank: RankingInfo;
   }
 }
+
+const [globalFilter, setGlobalFilter] = createSignal("");
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -59,49 +64,12 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const defaultData = () => makeData(10);
-
-type DebouncedInputProps<T> = {
-  value: T;
-  onChange: (value: T) => void;
-  debounce?: number;
-} & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "onChange">;
-
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: DebouncedInputProps<string | number>) {
-  const [value, setValue] = createSignal<string | number>(initialValue);
-
-  createEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  createEffect(() => {
-    const timeout = setTimeout(() => {
-      if (typeof initialValue === "number") {
-        onChange(Number(value()));
-      } else {
-        onChange(value());
-      }
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [value, onChange, debounce]);
-
-  return (
-    <input
-      {...props}
-      value={value()}
-      onInput={(e) => setValue(e.currentTarget.value)}
-    />
-  );
-}
+const debounceSetGlobalFilter = debounce(
+  (value: string) => setGlobalFilter(value),
+  500
+);
 
 function App() {
-  const [globalFilter, setGlobalFilter] = createSignal("");
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>(
     []
   );
@@ -113,11 +81,11 @@ function App() {
         footer: (props) => props.column.id,
         columns: [
           {
-            accessorKey: "firstName",
-            // accessorFn: (row) => row.firstName,
-            // id: "firstName",
+            // accessorKey: "firstName",
+            accessorFn: (row) => row.firstName,
+            id: "firstName",
             cell: (info) => info.getValue(),
-            // header: () => <span>First Name</span>,
+            header: () => <span>First Name</span>,
             footer: (props) => props.column.id,
           },
           {
@@ -164,8 +132,8 @@ function App() {
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(5000));
-  const refreshData = () => setData((old) => makeData(5000));
+  const [data, setData] = createSignal<Person[]>(makeData(1000));
+  const refreshData = () => setData((old) => makeData(1000));
 
   // Create the table and pass your options
   const table = createSolidTable({
@@ -199,11 +167,6 @@ function App() {
     debugColumns: false,
   });
 
-  console.log(
-    "table.getState().columnFilters: ",
-    JSON.stringify(table.getState().columnFilters)
-  );
-
   createEffect(() => {
     if (table.getState().columnFilters[0]?.id === "fullName") {
       if (table.getState().sorting[0]?.id !== "fullName") {
@@ -211,39 +174,36 @@ function App() {
       }
     }
   }, [table.getState().columnFilters[0]?.id]);
+
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm">
-      <div class="text-xs bg-stone-100 p-2 m-2 rounded-lg">
-        Note: Second, filtering attempt, additional fields, string only, extra
-        added it, own state managment was the original issue. Input rather than
-        DebouncedInput | /tables/filter01/filter03 | Filter03
+      <div class="text-xs bg-orange-100 p-2 m-2">
+        Note: Third, filtering attempt, debounce changes. SUCCESS. |
+        /tables/filter01/1 | Filter03b1
       </div>
-      <div class="pb-4 m-2">
-        <DebouncedInput
+      <div>
+        <input
+          class="p-2 m-2 font-lg shadow border border-block rounded-md"
           value={globalFilter() ?? ""}
-          onChange={(value) => setGlobalFilter(String(value))}
-          class="p-2 font-lg shadow border border-block"
+          onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
           placeholder="Search all columns..."
         />
       </div>
       <div class="w-full-screen overflow-x-scroll">
-        <table class="m-2 text-xs">
+        <table class="m-2">
           <thead class="bg-stone-100">
             <For each={table.getHeaderGroups()}>
               {(headerGroup) => (
                 <tr>
                   <For each={headerGroup.headers}>
                     {(column) => (
-                      <th
-                        class="border bg-stone-200 px-8"
-                        colSpan={column.colSpan}
-                      >
+                      <th class="border bg-stone-200" colSpan={column.colSpan}>
                         <Show when={!column.isPlaceholder}>
                           <>
                             <div
                               class={
                                 column.column.getCanSort()
-                                  ? "cursor-pointer select-none bg-stone-300"
+                                  ? "cursor-pointer select-none"
                                   : ""
                               }
                               onClick={() =>
@@ -269,9 +229,9 @@ function App() {
                             </div>
 
                             {column.column.getCanFilter() ? (
-                              <div class="bg-stone-200">
+                              <div class="bg-stone-200 py-2">
                                 {" "}
-                                <pre>{column.column.id}</pre>
+                                {/* <pre>{column.column.id}</pre> */}
                                 <Filter column={column.column} table={table} />
                               </div>
                             ) : null}
@@ -302,26 +262,6 @@ function App() {
               )}
             </For>
           </tbody>
-          <tfoot>
-            <For each={table.getFooterGroups()}>
-              {(footerGroup) => (
-                <tr>
-                  <For each={footerGroup.headers}>
-                    {(header) => (
-                      <th colSpan={header.colSpan}>
-                        <Show when={!header.isPlaceholder}>
-                          {flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                        </Show>
-                      </th>
-                    )}
-                  </For>
-                </tr>
-              )}
-            </For>
-          </tfoot>
         </table>
       </div>
       <div class="h-2" />
@@ -389,14 +329,6 @@ function App() {
         Rerender
       </button>
       <pre>{JSON.stringify(columnFilters(), null, 2)}</pre>
-      next ..
-      {table
-        .getState()
-        .columnFilters.map(
-          (filter) =>
-            "<pre>" + JSON.stringify(filter, null, 2) + " foobar </pre>"
-        )}{" "}
-      .. end
     </div>
   );
 }
@@ -421,10 +353,6 @@ function Filter({
         : Array.from(column.getFacetedUniqueValues().keys()).sort(),
     [column.getFacetedUniqueValues()]
   );
-
-  // onCleanup(() => {
-  //   column.setFilterValue(undefined);
-  // });
 
   return typeof firstValue === "number" ? (
     <div>
@@ -473,7 +401,7 @@ function Filter({
     <>
       <datalist id={column.id + "list"}>
         {Array.from(sortedUniqueValues())
-          .slice(0, 5000)
+          .slice(0, 1000)
           .map((value: any) => (
             <option value={value} />
           ))}

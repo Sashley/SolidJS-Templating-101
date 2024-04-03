@@ -88,7 +88,7 @@ function App() {
   });
 
   return (
-    <div class="p-10 bg-stone-200 m-4 text-sm">
+    <div class="p-4 bg-stone-200 m-4 text-sm">
       <div class="text-xs bg-stone-100 p-2 m-2">
         Note: sorting 01 | /tables/sorting/sorting01 | Sorting01
       </div>

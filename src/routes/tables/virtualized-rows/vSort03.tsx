@@ -100,6 +100,12 @@ function App() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    filterFns: {
+      fuzzy: (value: any, filterValue: any) => {
+        // Implement your fuzzy filter logic here
+        return true; // Replace with your actual filter logic
+      },
+    },
   });
 
   const tableContainerRef = createSignal<HTMLDivElement>();

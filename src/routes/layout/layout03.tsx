@@ -32,9 +32,12 @@ export default function Layout() {
       <div class="flex flex-grow max-h-[calc(100%-3rem)]">
         {/* Menubar */}
         <div
+          // class={`xl:w-80 min-w-[16rem] ${
+          //   isMenubarOpen() ? "flex" : "hidden"
+          // } 2xl:flex flex-col`}
           class={`xl:w-80 min-w-[16rem] ${
             isMenubarOpen() ? "flex" : "hidden"
-          } 2xl:flex flex-col`}
+          } lg:flex flex-col`}
         >
           {/* Menu Header */}
           <div class="p-4 bg-stone-700 ">

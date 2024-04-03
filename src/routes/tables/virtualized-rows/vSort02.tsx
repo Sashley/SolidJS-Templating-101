@@ -106,14 +106,20 @@ function App() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    filterFns: {
+      fuzzy: (value: any, row: any) => {
+        // Add your fuzzy filter logic here
+        return true; // Replace with your actual filter logic
+      },
+    },
   });
 
   const tableContainerRef = createSignal<HTMLDivElement>();
 
   const { rows } = table.getRowModel();
 
+  // let parentRef: any;
   let parentRef: any;
-  // let parentRef: tableContainerRef;
   const rowVirtualizer = createVirtualizer({
     count,
     // parentRef: tableContainerRef,
@@ -164,12 +170,15 @@ function App() {
   }
 
   return (
-    <div class="p-8 py-4">
+    <div class="p-4 py-4">
       <div class="h-2" />
-      <div class="text-xs bg-stone-100 p-2 m-2">
+      <div class="text-xs bg-stone-100 m-2">
         Note: virtual | table | column sorting | vSort02
       </div>
-      <div ref={parentRef} class="container">
+      <div
+        ref={parentRef}
+        class="border border-stone-100 h-[75vh] xl:w-[80vw] md:w-[70vw] overflow-auto text-sm"
+      >
         <table>
           <thead>
             <For each={table.getHeaderGroups()}>
@@ -177,10 +186,7 @@ function App() {
                 <tr>
                   <For each={headerGroup.headers}>
                     {(header) => (
-                      <th
-                        colSpan={header.colSpan}
-                        style={{ width: `${header.getSize()}px` }}
-                      >
+                      <th colSpan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <div
                             classList={{

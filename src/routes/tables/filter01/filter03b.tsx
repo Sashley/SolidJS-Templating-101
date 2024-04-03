@@ -60,32 +60,6 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const defaultData = () => makeData(10);
-
-// const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-//   let dir = 0;
-
-//   // Only sort by rank if the column has ranking information
-//   if (rowA.columnFiltersMeta[columnId]) {
-//     dir = compareItems(
-//       rowA.columnFiltersMeta[columnId]?.itemRank!,
-//       rowB.columnFiltersMeta[columnId]?.itemRank!
-//     );
-//   }
-
-//   // Provide an alphanumeric fallback for when the item ranks are equal
-//   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-// };
-
-// // type Person = {
-// //   firstName: string;
-// //   lastName: string;
-// //   age: number;
-// //   visits: number;
-// //   status: string;
-// //   progress: number;
-// // };
-
 type DebouncedInputProps<T> = {
   value: T;
   onChange: (value: T) => void;
@@ -95,7 +69,7 @@ type DebouncedInputProps<T> = {
 function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 500,
+  debounce = 100,
   ...props
 }: DebouncedInputProps<string | number>) {
   const [value, setValue] = createSignal<string | number>(initialValue);
@@ -120,7 +94,7 @@ function DebouncedInput({
     <input
       {...props}
       value={value()}
-      onInput={(e) => setValue(e.currentTarget.value)}
+      onChange={(e) => setValue(e.currentTarget.value)}
     />
   );
 }
@@ -138,11 +112,11 @@ function App() {
         footer: (props) => props.column.id,
         columns: [
           {
-            accessorKey: "firstName",
-            // accessorFn: (row) => row.firstName,
-            // id: "firstName",
+            // accessorKey: "firstName",
+            accessorFn: (row) => row.firstName,
+            id: "firstName",
             cell: (info) => info.getValue(),
-            // header: () => <span>First Name</span>,
+            header: () => <span>First Name</span>,
             footer: (props) => props.column.id,
           },
           {
@@ -189,14 +163,8 @@ function App() {
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(5000));
-  const refreshData = () => setData((old) => makeData(5000));
-
-  // const [columns] = React.useState<typeof defaultColumns>(() => [
-  //   ...defaultColumns,
-  // ])
-
-  // const rerender = React.useReducer(() => ({}), {})[1]
+  const [data, setData] = createSignal<Person[]>(makeData(1000));
+  const refreshData = () => setData((old) => makeData(1000));
 
   // Create the table and pass your options
   const table = createSolidTable({
@@ -240,40 +208,6 @@ function App() {
     }
   }, [table.getState().columnFilters[0]?.id]);
 
-  // onCleanup(() => {
-  //   //     // Cleanup code if necessary
-  //   //   });
-  //   setColumnFilters([]);
-  // });
-
-  // Manage your own state
-  // const [state, setState] = createSignal<TableState>(table.initialState);
-
-  // // Override the state managers for the table to your own - failed with SolidJS - needs reworking
-  // table.setOptions((prev) => ({
-  //   ...prev,
-  //   state: state(),
-  //   onStateChange: setState,
-  //   // These are just table options, so if things
-  //   // need to change based on your state, you can
-  //   // derive them here
-
-  //   // Just for fun, let's debug everything if the pageIndex
-  //   // is greater than 2
-  //   debugTable: state().pagination.pageIndex > 2,
-  // }));
-
-  // function getClassValue(column: any): string | undefined {
-  //   const facetedValues = column.column._getFacetedMinMaxValues?.();
-
-  //   if (Array.isArray(facetedValues)) {
-  //     return facetedValues.join(" - ");
-  //   } else if (facetedValues !== undefined) {
-  //     return facetedValues.toString();
-  //   }
-  //   return ""; // return empty string by default
-  // }
-
   return (
     <div class="p-2 bg-stone-300 m-4 text-sm">
       <div class="text-xs bg-orange-100 p-2 m-2">
@@ -283,12 +217,14 @@ function App() {
       </div>
       <div class="pb-4 m-2">
         <DebouncedInput
-          value={globalFilter() ?? ""}
+          value={globalFilter() ?? "af"}
           onChange={(value) => setGlobalFilter(String(value))}
           class="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
+          placeholder="Search all columns ..."
         />
       </div>
+      {globalFilter()}
+      {"ghssss"}
       <div class="w-full-screen overflow-x-scroll">
         <table class="m-2">
           <thead class="bg-stone-100">
@@ -299,37 +235,10 @@ function App() {
                     {(column) => (
                       <th
                         class="border bg-stone-200 px-8"
-                        // {...column.getHeaderProps()}
                         colSpan={column.colSpan}
                       >
-                        {/* {flexRender(
-                          column.column.columnDef.header,
-                          column.getContext()
-                        )} */}
                         <Show when={!column.isPlaceholder}>
-                          {/* <div>
-                            <div class={getClassValue(column)}></div>
-                          </div> */}
-
                           <>
-                            {/* <div
-                              {...{
-                                class: column.column.getCanSort()
-                                  ? "cursor-pointer select-none bg-stone-300"
-                                  : "",
-                                onClick: column.column.getToggleSortingHandler(),
-                              }}
-                            >
-                              {flexRender(
-                                column.column.columnDef.header,
-                                column.getContext()
-                              )}
-                              {{
-                                asc: " 🔼",
-                                desc: " 🔽",
-                              }[column.column.getIsSorted() as string] ?? null}
-                            </div> */}
-
                             <div
                               class={
                                 column.column.getCanSort()
@@ -367,38 +276,14 @@ function App() {
                             ) : null}
                           </>
                         </Show>
-                        {/* {colShow>mn.render("Header")} */}
                       </th>
                     )}
                   </For>
                 </tr>
               )}
-              {/* {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))} */}
             </For>
           </thead>
           <tbody>
-            {/* {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))} */}
             <For each={table.getRowModel().rows}>
               {(row) => (
                 <tr class="bg-stone-50">
@@ -417,20 +302,6 @@ function App() {
             </For>
           </tbody>
           <tfoot>
-            {/* {table.getFooterGroups().map((footerGroup) => (
-              <tr key={footerGroup.id}>
-                {footerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext()
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))} */}
             <For each={table.getFooterGroups()}>
               {(footerGroup) => (
                 <tr>
@@ -589,7 +460,7 @@ function Filter({
     <>
       <datalist id={column.id + "list"}>
         {Array.from(sortedUniqueValues())
-          .slice(0, 5000)
+          .slice(0, 1000)
           .map((value: any) => (
             <option value={value} />
           ))}
@@ -597,7 +468,7 @@ function Filter({
       <input
         type="text"
         value={(column.getFilterValue() ?? "") as string}
-        // onInput={(e) => column.setFilterValue(e.currentTarget.value)}
+        onInput={(e) => column.setFilterValue(e.currentTarget.value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         class="w-36 border shadow rounded"
         list={column.id + "list"}

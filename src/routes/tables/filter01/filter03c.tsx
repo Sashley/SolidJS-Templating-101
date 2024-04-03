@@ -167,8 +167,8 @@ function App() {
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(5000));
-  const refreshData = () => setData((old) => makeData(5000));
+  const [data, setData] = createSignal<Person[]>(makeData(1000));
+  const refreshData = () => setData((old) => makeData(1000));
 
   // Create the table and pass your options
   const table = createSolidTable({

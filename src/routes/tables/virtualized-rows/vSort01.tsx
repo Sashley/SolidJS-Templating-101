@@ -91,11 +91,16 @@ function App() {
     //   console.log("sorting changed");
     //   setSorting;
     // },
-
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
+    filterFns: {
+      fuzzy: (value: any, filterValue: any) => {
+        // Implement your fuzzy filter logic here
+        return true; // Replace with your actual filter condition
+      },
+    },
   });
 
   const tableContainerRef = createSignal<HTMLDivElement>();

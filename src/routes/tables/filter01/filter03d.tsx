@@ -85,7 +85,7 @@ function DebouncedInput({
     <input
       {...props}
       value={filterValue()}
-      onChange={(e) => setFilterValue(e.currentTarget.value)}
+      onInput={(e) => setFilterValue(e.currentTarget.value)}
     />
   );
 }
@@ -124,8 +124,8 @@ function App() {
     []
   );
 
-  const [data, setData] = createSignal<Person[]>(makeData(5000));
-  const refreshData = () => setData((old) => makeData(50000));
+  const [data, setData] = createSignal<Person[]>(makeData(1000));
+  const refreshData = () => setData((old) => makeData(1000));
 
   // Create the table and pass your options
   const table = createSolidTable({
@@ -204,8 +204,8 @@ function App() {
     <div class="p-2 bg-stone-300 m-4 text-sm">
       <div class="text-xs bg-orange-100 p-2 m-2">
         Note: Second, filtering attempt, additional fields, string only, extra
-        added it, own state managment was the original issue. |
-        /tables/filter01/filter03d | Filter03d
+        added it, own state managment was the original issue. Fixed with
+        e.CurrentTarget | /tables/filter01/filter03d | Filter03d
       </div>
       <div class="w-full-screen overflow-x-scroll">
         <table class="m-2 text-sm">
@@ -228,8 +228,10 @@ function App() {
 
                         {header.column.getCanFilter() ? (
                           <div class="bg-stone-300">
-                            {" "}
-                            <Filter column={header.column} table={table} />
+                            {/* {"vvvvv "} */}
+                            <pre>{header.column.id}</pre>
+                            <Filter column={header.column} table={table} />{" "}
+                            {/* {"lll"} */}
                           </div>
                         ) : null}
                       </th>
@@ -284,15 +286,15 @@ function Filter({
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id);
 
-  // const columnFilterValue = column.getFilterValue();
+  const columnFilterValue = column.getFilterValue();
 
-  function testFilter01() {
-    const [testFilterValue, setTestFilterValue] = createSignal<
-      string | number
-    >();
-    // columnFilterValue ? " " : " "
-    console.log("fired testFilter01");
-  }
+  // function testFilter01() {
+  //   const [testFilterValue, setTestFilterValue] = createSignal<
+  //     string | number
+  //   >();
+  //   // columnFilterValue ? " " : " "
+  //   console.log("fired testFilter01");
+  // }
 
   const sortedUniqueValues = createMemo(
     () =>
@@ -310,15 +312,15 @@ function Filter({
     <>
       <datalist id={column.id + "list"}>
         {Array.from(sortedUniqueValues())
-          .slice(0, 5000)
+          .slice(0, 50)
           .map((value: any) => (
             <option value={value} />
           ))}{" "}
       </datalist>{" "}
-      <DebouncedInput
+      <input
         type="text"
         value={(column.getFilterValue() ?? "") as string}
-        onChange={(value) => column.setFilterValue(value)}
+        onInput={(e) => column.setFilterValue(e.currentTarget.value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         class="w-36 border shadow rounded"
         list={column.id + "list"}

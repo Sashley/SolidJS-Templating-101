@@ -70,6 +70,10 @@ export const routes: RouteDefinition[] = [
     path: "/tables/filter01/filter03b",
   },
   {
+    component: lazy(() => import("../routes/tables/filter01/filter03b1")),
+    path: "/tables/filter01/filter03b1",
+  },
+  {
     component: lazy(() => import("../routes/tables/filter01/filter03c")),
     path: "/tables/filter01/filter03c",
   },
@@ -146,5 +150,9 @@ export const routes: RouteDefinition[] = [
   {
     component: lazy(() => import("../routes/tables/virtualized-rows/vSort02")),
     path: "/tables/virtualized-rows/vSort02",
+  },
+  {
+    component: lazy(() => import("../routes/tables/virtualized-rows/vSort03")),
+    path: "/tables/virtualized-rows/vSort03",
   },
 ];
